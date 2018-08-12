@@ -31,7 +31,7 @@ class App extends Component {
   render() {
     return (
       <div className="App" tabIndex="0" onKeyPress={e => this.onKeyDown(e)} >
-        <GameField gridHeight="15" gridWidth="15" ref={gameField => this.gameField = gameField} />
+        <GameField gridHeight="20" gridWidth="15" ref={gameField => this.gameField = gameField} />
       </div>
     );
   }

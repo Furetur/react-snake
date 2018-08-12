@@ -32,8 +32,8 @@ class GameField extends Component {
                 startCell: snakeStartCell,
             },
             figures: testFigures,
-            gridHeight: props.gridHeight,
-            gridWidth: props.gridWidth,
+            gridHeight: parseInt(props.gridHeight),
+            gridWidth: parseInt(props.gridWidth),
         }
     }
 
@@ -113,7 +113,7 @@ class GameField extends Component {
         return (
             <div className="GameField" style={styles}>
                 <Snake startCell={this.state.snake.startCell}
-                    maxX={this.state.gridWidth} maxY={this.state.gridHeight}
+                    maxX={this.state.gridWidth - 1} maxY={this.state.gridHeight - 1}
                     ref={snake => this.snake = snake}
                     onUpdate={this._onSnakeUpdate} />
                 { this.state.figures.map(
