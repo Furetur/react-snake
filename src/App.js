@@ -10,16 +10,16 @@ class App extends Component {
     if (event.key === ' ') {
       this.gameField.snake.move();
     }
-    if (event.key === 'w') {
+    if (event.key === 'ArrowUp') {
       this.gameField.snake.turn([0, -1]);
     }
-    if (event.key === 'a') {
+    if (event.key === 'ArrowLeft') {
       this.gameField.snake.turn([-1, 0]);
     }
-    if (event.key === 's') {
+    if (event.key === 'ArrowDown') {
       this.gameField.snake.turn([0, 1]);
     }
-    if (event.key === 'd') {
+    if (event.key === 'ArrowRight') {
       this.gameField.snake.turn([1, 0]);
     }
     if (event.key === 'x') {
@@ -30,7 +30,7 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App" tabIndex="0" onKeyPress={e => this.onKeyDown(e)} >
+      <div className="App" tabIndex="0" onKeyDown={e => this.onKeyDown(e)} >
         <GameField gridHeight="20" gridWidth="15" ref={gameField => this.gameField = gameField} />
       </div>
     );
