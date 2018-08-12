@@ -1,0 +1,15 @@
+.Figure {
+
+}
+
+.Figure.health {
+    background: red;
+}
+
+.Figure.poison {
+    background: green; 
+}
+
+.Figure.block {
+    background: black;
+}

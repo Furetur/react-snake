@@ -1,0 +1,9 @@
+.GameField {
+    height: 60%;
+
+    margin: auto;
+    
+    position: relative;
+
+    border: 1px solid gray;
+}
