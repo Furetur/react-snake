@@ -1,3 +1,3 @@
-export const CELL_SIZE = 2;
+export const CELL_SIZE = 20;
 
-export const unitize = (value) => `${value}vw`;
+export const unitize = (value) => `${value}px`;
