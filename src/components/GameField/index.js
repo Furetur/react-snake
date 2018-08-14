@@ -85,6 +85,15 @@ class GameField extends Component {
         });
     }
 
+    _addFigureFunctionForLevel(level) {
+        // this function lets a level add a figure only if the level is active
+        return (figure) => {
+            if (level === this.level) {
+                this._addFigure(figure)
+            }
+        }
+    }
+
     _getCellOccupation = (cell) => {
         // check if cell is occupied by a figure
         for (let figure of this.state.figures) {
@@ -135,7 +144,10 @@ class GameField extends Component {
             gridWidth: this.level.gridWidth,
             gridHeight: this.level.gridHeight,
         });
-        this.level.init(this._addFigure, this._getCellOccupation);
+        this.level.init(
+            this._addFigureFunctionForLevel(this.level),
+            this._getCellOccupation
+        );
         this.levelUpdatesIndex++;
     }
 

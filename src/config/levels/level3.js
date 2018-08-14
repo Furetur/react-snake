@@ -1,21 +1,42 @@
 import wait from "../../utils/wait";
 
-const level3 = {
-    name: 'Level2',
-    snakeStartCell: {
-        x: 10,
-        y: 10,
-        vector: [1, 0],
-    },
-    startFigures: [],
-    gridWidth: 40,
-    gridHeight: 40,
-    levelGoal: 4,
-};
+
+class Filler {
+    constructor(fillCell) {
+        this.figures = [];
+    }
+
+    _addFigure(figure) {
+        this.figures.push(figure);
+    }
+
+    async horizontalWall({ y, fromX, toX }) {
+        for (let x = fromX; x <= toX; x++) {
+            await wait(1);
+            this._addFigure({
+                type: 'block',
+                x: x,
+                y: y,
+            });
+        }
+    }
 
 
-level3.init = (addFigureFunction, getCellOccupation) => {
-    const filler = new Filler(addFigureFunction);
+    async verticalWall({ x, fromY, toY }) {
+        for (let y = fromY; y <= toY; y++) {
+            await wait(1);
+            this._addFigure({
+                type: 'block',
+                x: x,
+                y: y,
+            });
+        }
+    }
+}
+
+
+const getStartRoom = () => {
+    const filler = new Filler();
     // upper-left corner
     filler.verticalWall({
         x: 0,
@@ -67,38 +88,29 @@ level3.init = (addFigureFunction, getCellOccupation) => {
         fromY: 15,
         toY: 20,
     })
+
+    return filler.figures;
+}
+
+const level3 = {
+    name: 'Level2',
+    snakeStartCell: {
+        x: 10,
+        y: 10,
+        vector: [1, 0],
+    },
+    startFigures: getStartRoom(),
+    gridWidth: 40,
+    gridHeight: 21,
+    levelGoal: 4,
 };
 
 
-class Filler {
-    constructor(fillCell) {
-        this.fillCell = fillCell;
-    }
+level3.init = (addFigureFunction, getCellOccupation) => {
+    
+};
 
 
-    async horizontalWall({ y, fromX, toX }) {
-        for (let x = fromX; x <= toX; x++) {
-            await wait(1);
-            this.fillCell({
-                type: 'block',
-                x: x,
-                y: y,
-            });
-        }
-    }
-
-
-    async verticalWall({ x, fromY, toY }) {
-        for (let y = fromY; y <= toY; y++) {
-            await wait(1);
-            this.fillCell({
-                type: 'block',
-                x: x,
-                y: y,
-            });
-        }
-    }
-}
 
 
 export default level3;
