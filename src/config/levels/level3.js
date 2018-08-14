@@ -2,11 +2,12 @@ import wait from "../../utils/wait";
 
 
 class Filler {
-    constructor(fillCell) {
+    constructor() {
         this.figures = [];
     }
 
     _addFigure(figure) {
+        figure.id = this.figures.length;
         this.figures.push(figure);
     }
 
@@ -103,6 +104,7 @@ const level3 = {
     gridWidth: 40,
     gridHeight: 21,
     levelGoal: 4,
+    levelSpawningInterval: 500,
 };
 
 

@@ -17,6 +17,7 @@ const level1 = {
     gridWidth: 25,
     gridHeight: 25,
     levelGoal: 4,
+    levelSpawningInterval: 2000,
 }
 
 

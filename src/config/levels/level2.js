@@ -5,7 +5,7 @@ import wait from "../../utils/wait";
 import removeFromArray from "../../utils/removeFromArray";
 
 
-const CELL_FILLING_TIMEOUT = 100;
+const CELL_FILLING_TIMEOUT = 500;
 
 const level2 = {
     name: 'Level2',
@@ -18,6 +18,7 @@ const level2 = {
     gridWidth: 25,
     gridHeight: 15,
     levelGoal: 4,
+    levelSpawningInterval: 200,
 };
 
 

@@ -6,6 +6,7 @@ import level1 from './config/levels/level1';
 import level2 from './config/levels/level2';
 import { VECTOR_UP, VECTOR_LEFT, VECTOR_DOWN, VECTOR_RIGHT } from './config/vectors';
 import level3 from './config/levels/level3';
+import { SNAKE_MOVING_SPEED } from './config/snake';
 
 
 
@@ -19,23 +20,44 @@ class App extends Component {
   }
   onKeyDown(event) {
     if (event.key === ' ') {
-      this.gameField.snake.move();
+      this.startMovingSnake();
     }
     if (event.key === 'ArrowUp') {
-      this.gameField.snake.turn(VECTOR_UP);
+      this.turnSnake(VECTOR_UP);
     }
     if (event.key === 'ArrowLeft') {
-      this.gameField.snake.turn(VECTOR_LEFT);
+      this.turnSnake(VECTOR_LEFT);
     }
     if (event.key === 'ArrowDown') {
-      this.gameField.snake.turn(VECTOR_DOWN);
+      this.turnSnake(VECTOR_DOWN);
     }
     if (event.key === 'ArrowRight') {
-      this.gameField.snake.turn(VECTOR_RIGHT);
+      this.turnSnake(VECTOR_RIGHT);
     }
     if (event.key === 'x') {
       this.gameField.snake.extendTail();
     }
+  }
+
+  startMovingSnake() {
+    this.snakeInterval = setInterval(
+      this.moveSnake,
+      SNAKE_MOVING_SPEED,
+    )
+  }
+
+  moveSnake = () => {
+    this.gameField.snake.move();
+  }
+
+  turnSnake(vector) {
+    this.stopMovingSnake();
+    this.gameField.snake.turn(vector);
+    this.startMovingSnake();
+  }
+
+  stopMovingSnake() {
+    clearInterval(this.snakeInterval);
   }
 
   levels = [
@@ -54,6 +76,13 @@ class App extends Component {
   }
 
 
+  onGameLost = () => {
+    this.stopMovingSnake();
+    this.setState({
+      level: 0,
+    });
+  }
+
   onGameWon() {
     alert('game won');
   }
@@ -63,7 +92,7 @@ class App extends Component {
     console.log('app updated');
     return (
       <div className="App" tabIndex="0" onKeyDown={e => this.onKeyDown(e)} >
-        <GameField level={this.levels[this.state.level]} onLevelComplete={this.onLevelComplete} ref={gameField => this.gameField = gameField} />
+        <GameField level={this.levels[this.state.level]} onLevelComplete={this.onLevelComplete} onSnakeDie={this.onGameLost} ref={gameField => this.gameField = gameField} />
       </div>
     );
   }
