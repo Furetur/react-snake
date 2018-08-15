@@ -24,9 +24,20 @@
   top: 50px;
   left: 50px;
 
-  font-size: 5rem;
+  font-size: 3rem;
+  animation: accent 0.7s infinite ease-in-out alternate;
 }
 
 .focus-reminder.shown {
   display: block;
+}
+
+
+@keyframes accent {
+  from {
+    color: red;
+  }
+  to {
+    color: #fff;
+  }
 }

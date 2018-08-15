@@ -1,0 +1,18 @@
+.Snake {
+    background: #94D0FF;
+    /* background: #218763; */
+}
+
+.Snake.head {
+    /* background: linear-gradient(#b967ff 60%, #218763); */
+    border-radius: 40% 40% 0 0;
+    /* box-shadow: 0 0 10px rgba(255,255,255,1), 0 0 20px rgba(255,255,255,1), 0 0 30px rgba(255,255,255,1), 0 0 40px #00ffff, 0 0 70px #00ffff, 0 0 80px #00ffff, 0 0 100px #00ffff;; */
+}
+
+.Snake.tail {
+    border-radius: 0 0 40% 40%;
+}
+
+.Snake.head.tail {
+    border-radius: 35%;
+}

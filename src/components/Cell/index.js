@@ -24,9 +24,7 @@ const Cell = (props) => {
   };
 
   return (
-    <div className={`Cell ${props.className}`} style={styles}>
-      >
-    </div>
+    <div className={`Cell ${props.className}`} style={styles} />
   );
 }
 

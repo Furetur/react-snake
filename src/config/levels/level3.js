@@ -70,8 +70,10 @@ const level3 = {
     startFigures: getStartRoom(),
     gridWidth: 40,
     gridHeight: 21,
-    levelGoal: 70,
+    levelGoal: 80,
     levelSpawningInterval: 2000,
+
+    easterEggSnakeConfig: '0,-1,0,-1,0,-1,-1,0,-1,0,-1,0,0,1,0,1,1,0,1,0,1,0,1,0',
 };
 
 

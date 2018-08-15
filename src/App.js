@@ -8,6 +8,7 @@ import { VECTOR_UP, VECTOR_LEFT, VECTOR_DOWN, VECTOR_RIGHT } from './config/vect
 import level3 from './config/levels/level3';
 import { SNAKE_MOVING_SPEED } from './config/snake';
 import vectorsAreOpposite from './utils/vectorsAreOpposite';
+import Score from './components/Score';
 
 
 
@@ -19,15 +20,26 @@ class App extends Component {
       attempt: 0,
       level: 0,
       focused: false,
+      keyIsDown: false,
     }
   }
 
+  get currentLevel() {
+    return this.levels[this.state.level];
+  }
+
+  /**
+   * Is called when the app's main div gains focus
+   */
   onFocus = () => {
     this.setState({
       focused: true,
     });
   }
 
+  /**
+   * Is called when the app's main div loses focus
+   */
   onBlur = () => {
     this.setState({
       focused: false,
@@ -35,7 +47,19 @@ class App extends Component {
   }
 
 
-  onKeyDown(event) {
+  /**
+   * Is called when user presses a key
+   */
+  onKeyDown = (event) => {
+    // this prevents user from holding down a button
+    if (this.state.keyIsDown) {
+      return;
+    }
+
+    this.setState({
+      keyIsDown: true,
+    })
+
     if (event.key === 'ArrowUp') {
       this.turnSnake(VECTOR_UP);
     }
@@ -48,44 +72,76 @@ class App extends Component {
     if (event.key === 'ArrowRight') {
       this.turnSnake(VECTOR_RIGHT);
     }
-    if (event.key === 'x') {
-      this.gameField.snake.extendTail();
-    }
   }
 
+  /**
+   * Is called when tuser releases a key
+   */
+  onKeyUp = () => {
+    this.setState({
+      keyIsDown: false,
+    })
+  }
+
+  /**
+   * Starts moving a snake each `SNAKE_MOVING_SPEED`ms
+   */
   startMovingSnake() {
     this.snakeInterval = setInterval(
       this.moveSnake,
       SNAKE_MOVING_SPEED,
     )
   }
+  
+  /**
+   * Stops moving a snake each couple of ms
+   */
+  stopMovingSnake() {
+    clearInterval(this.snakeInterval);
+  }
 
+
+  /**
+   * Moves a snake 1 cell
+   */
   moveSnake = () => {
     this.gameField.snake.move();
   }
 
+
+  /**
+   * Turns a snake to the direction of given vector
+   * @param {number[]} vector [x, y]
+   */
   turnSnake(vector) {
+    // if snake is atleast 2 cells long
     // we cant turn snake 180 def
-    if (vectorsAreOpposite(vector, this.gameField.snake.vector)) return;
+    if (this.gameField.snake.prehead && vectorsAreOpposite(vector, this.gameField.snake.prehead.vector)) return;
 
     this.stopMovingSnake();
     this.gameField.snake.turn(vector);
     this.startMovingSnake();
   }
 
-  stopMovingSnake() {
-    clearInterval(this.snakeInterval);
-  }
 
+  /**
+   * A list of all levels (order matters)
+   */
   levels = [
     level1,
     level2,
     level3,
   ];
 
+  /**
+   * Is called when level is completed
+   */
   onLevelComplete = () => {
-    console.log(this);
-    console.log(this.state.level, this.levels.length)
+    // if it is the last level
+    if (this.state.level === this.levels.length - 1) {
+      this.onGameWon();
+      return;
+    }
 
     this.setState({
       level: this.state.level + 1
@@ -93,6 +149,9 @@ class App extends Component {
   }
 
 
+  /**
+   * Is called when player loses the game
+   */
   onGameLost = () => {
     this.stopMovingSnake();
     this.setState({
@@ -102,21 +161,27 @@ class App extends Component {
     this.startMovingSnake();
   }
 
+  /**
+   * Is called when player wins the game
+   */
   onGameWon() {
-    alert('game won');
+    window.location.href = 'https://www.youtube.com/watch?v=IMZo-aBp9OQ';
   }
 
+  /**
+   * Part of the react component lifecycle
+   * Is called after the component is rendered for the first time
+   */
   componentDidMount() {
     this.startMovingSnake();
   }
 
 
   render() {
-    console.log('app updated');
     return (
-      <div className="App" tabIndex="0" onFocus={this.onFocus} onBlur={this.onBlur} onKeyDown={e => this.onKeyDown(e)} ref={div => this.mainDiv = div} >
-        <div className={`focus-reminder ${this.state.focused ? '' : 'shown'}`}>Focus the game (by clicking once) to control the snake</div>
-        <GameField key={this.state.attempt} level={this.levels[this.state.level]} onLevelComplete={this.onLevelComplete} onSnakeDie={this.onGameLost} ref={gameField => this.gameField = gameField} />
+      <div className="App" tabIndex="0" onFocus={this.onFocus} onBlur={this.onBlur} onKeyDown={this.onKeyDown} onKeyUp={this.onKeyUp} ref={div => this.mainDiv = div}>
+        <div className={`focus-reminder ${this.state.focused ? '' : 'shown'}`}>Focus the game (by clicking once)</div>
+        <GameField key={this.state.attempt} level={this.currentLevel} onLevelComplete={this.onLevelComplete} onSnakeDie={this.onGameLost} ref={gameField => this.gameField = gameField} />
       </div>
     );
   }

@@ -1,0 +1,9 @@
+.Score {
+    position: absolute;
+    top: -70px;
+}
+
+.score-display {
+    font-size: 2rem;
+}
+

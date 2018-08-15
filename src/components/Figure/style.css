@@ -3,13 +3,30 @@
 }
 
 .Figure.health {
-    background: red;
+    background: #C774E8;
+    animation: bouncing 1s infinite ease-in-out alternate;
 }
 
 .Figure.poison {
-    background: green; 
+    /* not abstract :c */
+    background: transparent;
+    border-left: 10px solid transparent;
+	border-right: 10px solid transparent;
+	border-bottom: 20px solid #10D7AE;
 }
 
 .Figure.block {
-    background: black;
+    background: #000;
+}
+
+
+@keyframes bouncing {
+    from {
+        background: #C774E8;
+        transform: scale(0.9);
+    }
+    to {
+        background: #AD8CFF;
+        transform: scale(0.5);
+    }
 }

@@ -17,8 +17,10 @@ const level2 = {
     startFigures: [],
     gridWidth: 30,
     gridHeight: 30,
-    levelGoal: 50,
+    levelGoal: 60,
     levelSpawningInterval: 1000,
+
+    easterEggSnakeConfig: '0,-1,0,-1,0,-1,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,0,1,0,1,1,0,1,0,1,0,1,0,1,0,1,0',
 };
 
 

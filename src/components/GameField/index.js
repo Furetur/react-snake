@@ -8,12 +8,14 @@ import Figure from '../Figure';
 import hasCell from '../../utils/hasCell';
 import getAllCells from '../../utils/getAllCells';
 import randomFromArray from '../../utils/randomFromArray';
+import Score from '../Score';
 
 class GameField extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
+            score: 0,
             snakeAlive: false,
             figures: [],
             gridHeight: 0,
@@ -24,8 +26,8 @@ class GameField extends Component {
 
 
     /**
-     * Only checks collision between snake and other figures
-     * Figures can only be 1 cell
+     * Checks snake collides with any figures
+     * or if snake collides with itself
      */
     _checkCollision(snakeCells) {
         this.state.figures.forEach((figure, index) => {
@@ -48,38 +50,50 @@ class GameField extends Component {
         })
     }
 
-
+    /**
+     * 
+     * @param {number} figureIndex index of figure in this.state.figures
+     * @param {object} figure figure description
+     */
     _handleCollision(figureIndex, figure) {
         if (figure.type === 'health') this._healthFigureOnCollide(figureIndex);
         if (figure.type === 'poison') this._poisonFigureOnCollide(figureIndex);
         if (figure.type === 'block') this._blockFigureOnCollide();
     }
 
+    /**
+     * Called if snake collides with a health figure
+     * @param {number} figureIndex index of figure in this.state.figures
+     */
     _healthFigureOnCollide(figureIndex) {
         this._removeFigure(figureIndex);
         this.snake.extendTail();
     }
 
-
+    // easy
     _poisonFigureOnCollide(figureIndex) {
         this._removeFigure(figureIndex);
         this.snake.shortenTail();
     }
 
-
+    // easy
     _blockFigureOnCollide() {
         this.snake.kill();
     }
 
+    /**
+     * Called if snake collides with itself
+     */
     _handleSnakeOnCollideWithSelf() {
         this.snake.kill();
     }
 
-    
-    _getFigure(id) {
-        return this[`figure${id}`];
-    }
 
+
+    /**
+     * Generates a unique key for each figure
+     * that is later passed to <Figure key={key}...
+     */
     _getUniqueFigureKey = (figure) => {
         const figureIds = this.state.figures.map(figure => figure.id);
 
@@ -88,8 +102,6 @@ class GameField extends Component {
     }
 
     _addFigure = (figure) => {
-        console.log('adding figure', figure, this.state.figures);
-
         // if cell is already occupied
         if (this._getCellOccupation(figure) !== null)  {
             // then stop this function
@@ -110,6 +122,11 @@ class GameField extends Component {
         });
     }
 
+    /**
+     * Exists because previous level can not add figures into the current level
+     * @param {object} level Level configuration
+     * @returns {Function} adds a figure
+     */
     _addFigureFunctionForLevel(level) {
         // this function lets a level add a figure only if the level is active
         return (figure) => {
@@ -138,10 +155,10 @@ class GameField extends Component {
         return randomFromArray(unoccupiedCells);
     }
 
-    _stopSpawningHealthOrPoison = () => {
-        clearInterval(this.figureSpawningInterval);
-    }
-
+    
+    /**
+     * Starts spawning health and poison things
+     */
     _startSpawningHealthOrPoison = (interval) => {
         this.figureSpawningInterval = setInterval(() => {
             // pick cell randomly
@@ -157,15 +174,30 @@ class GameField extends Component {
             })
         }, interval);
     }
-
-
-    _figureRef = (id) => {
-        return (figure) => this[`figure${id}`] = figure;
+    
+    /**
+     * Stops spawning health and poison
+     */
+    _stopSpawningHealthOrPoison = () => {
+        clearInterval(this.figureSpawningInterval);
     }
 
-
-    // this method is called after the snake is updated
+    /**
+     * Is called each time the snake is updated
+     */
     _onSnakeUpdate = (snakeCells) => {
+        // update score
+        this.setState({
+            score: snakeCells.length,
+        });
+
+        // check easter egg
+        if (this.snake.config === this.state.level.easterEggSnakeConfig) {
+            // if the config is right then we swith to the next level
+            this.props.onLevelComplete();
+            return;
+        }
+
         if (snakeCells.length === 0) this.onSnakeDie();
         if (snakeCells.length === this.state.levelGoal) this.props.onLevelComplete();
 
@@ -173,6 +205,9 @@ class GameField extends Component {
     }
 
 
+    /**
+     * Is called if snake dies
+     */
     onSnakeDie() {
         alert('snake has died');
         this.setState({
@@ -181,6 +216,9 @@ class GameField extends Component {
         this.props.onSnakeDie();
     }
 
+    /**
+     * Reload the level
+     */
     _updateLevel() {
         console.log('loading', this.props.level.name);
         // remember the level
@@ -191,8 +229,8 @@ class GameField extends Component {
                 maxX={this.level.gridWidth - 1} maxY={this.level.gridHeight - 1}
                 ref={snake => this.snake = snake}
                 onUpdate={this._onSnakeUpdate} />,
+            level: this.props.level,
             levelGoal: this.level.levelGoal,
-            snakeAlive: true,
             snakeStartCell: this.level.snakeStartCell,
             levelSpawningInterval: this.level.levelSpawningInterval,
             figures: this.level.startFigures,
@@ -206,19 +244,26 @@ class GameField extends Component {
         this.levelUpdatesIndex++;
     }
 
+    /**
+     * Update the whole gamefield
+     */
     _updateGame() {
         this._stopSpawningHealthOrPoison();
         this._updateLevel();
         this._startSpawningHealthOrPoison(this.props.level.levelSpawningInterval);
     }
 
+    /**
+     * Is called after the component is rendered for the first time
+     */
     componentDidMount() {
-        console.log('game field mounted');
         this._updateGame();
     }
 
+    /**
+     * Is called after the component is rerendered each time
+     */
     componentDidUpdate() {
-        console.log('game field updated');
         // if level in props exists and it is not equal to the saved level
         if (this.props.level && this.props.level !== this.level) {
             // level has changed
@@ -228,20 +273,16 @@ class GameField extends Component {
 
 
     render() {
-        console.log('game field rerendered');
-        if (this.snake) console.log(this.snake.cells);
         const styles = {
             width: unitize(CELL_SIZE * this.state.gridWidth),
             height: unitize(CELL_SIZE * this.state.gridHeight),
-            backgroundColor: 'rgba(#fff, .5)',
-	        backgroundImage: 'linear-gradient(rgba(150, 150, 150, .3) 1px, transparent 1px), linear-gradient(90deg, rgba(150, 150, 150, .3) 1px, transparent 1px)',
 	        backgroundSize: `${unitize(CELL_SIZE)} ${unitize(CELL_SIZE)}, ${unitize(CELL_SIZE)} ${unitize(CELL_SIZE)}`,
-	        backgroundPosition: '-1px -1px, -1px -1px',
         }
 
         
         return (
             <div className="GameField" style={styles}>
+                <Score score={this.state.score} goal={this.state.levelGoal} />
                 {/* render snake if it is alive */}
                 { this.state.snake }
 
@@ -250,8 +291,7 @@ class GameField extends Component {
                     (figure, index) => 
                         /* */
                         <Figure key={`${this.levelUpdatesIndex}-${figure.id}`} type={figure.type}
-                            x={figure.x} y={figure.y}
-                            ref={this._figureRef(index)} />
+                            x={figure.x} y={figure.y} />
                 ) }
             </div>
         );

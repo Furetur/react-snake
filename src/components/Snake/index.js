@@ -5,6 +5,8 @@ import vectorToRotation from '../../utils/vectorToRotation';
 import loop from '../../utils/loop';
 import vectorsAreOpposite from '../../utils/vectorsAreOpposite';
 
+import './style.css';
+
 export default class Snake extends Component {
   constructor(props) {
     super(props);
@@ -27,15 +29,22 @@ export default class Snake extends Component {
     return this.state.cells[0];
   }
 
-
-  get tail() {
-    return this.state.cells[
-      this.state.cells.length - 1
-    ];
+  get prehead() {
+    return this.state.cells[1];
   }
 
-  get vector() {
-    return this.head.vector;
+
+  get tail() {
+    return this.state.cells[this.tailIndex];
+  }
+
+  get tailIndex() {
+    return this.state.cells.length - 1;
+  }
+
+
+  get config() {
+    return this.state.cells.map(cell => cell.vector).toString();
   }
 
 
@@ -44,6 +53,10 @@ export default class Snake extends Component {
   }
 
 
+  /**
+   * Returns a next cell based on its vector
+   * @param {{x: number, y: number, vector: [number, number]}} cell 
+   */
   _getNextCell(cell) {
     return {
       x: this.loopX(cell.x + cell.vector[0]),
@@ -52,6 +65,10 @@ export default class Snake extends Component {
     }
   }
 
+  /**
+   * Returns a previous cell based on its (inversed) vector
+   * @param {{x: number, y: number, vector: [number, number]}} cell 
+   */
   _getPreviousCell(cell) {
     return {
       x: this.loopX(cell.x + -cell.vector[0]),
@@ -99,6 +116,9 @@ export default class Snake extends Component {
     })
   }
 
+  /**
+   * Is called each time snake is updated
+   */
   componentDidUpdate() {
     this.props.onUpdate(this.state.cells);
   }
@@ -108,7 +128,8 @@ export default class Snake extends Component {
     return (
       <div>
         {this.state.cells.map(
-          (cell, index) => <Cell key={index} x={cell.x} y={cell.y} rotation={vectorToRotation(cell.vector)} />
+          (cell, index) => <Cell key={index} className={`Snake ${index === 0 ? 'head' : ''} ${index === this.tailIndex ? 'tail' : ''}`}
+            x={cell.x} y={cell.y} rotation={vectorToRotation(cell.vector)} />
         )}
       </div>
     )

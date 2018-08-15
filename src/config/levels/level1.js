@@ -70,6 +70,8 @@ const level1 = {
     gridHeight: 25,
     levelGoal: 40,
     levelSpawningInterval: 2000,
+
+    easterEggSnakeConfig: '0,-1,0,-1,0,-1,1,0,1,0,0,1,0,1,-1,0,-1,0',
 }
 
 
