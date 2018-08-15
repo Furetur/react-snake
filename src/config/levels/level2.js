@@ -5,7 +5,7 @@ import wait from "../../utils/wait";
 import removeFromArray from "../../utils/removeFromArray";
 
 
-const CELL_FILLING_TIMEOUT = 500;
+const CELL_FILLING_TIMEOUT = 350;
 
 const level2 = {
     name: 'Level2',
@@ -15,10 +15,10 @@ const level2 = {
         vector: [1, 0],
     },
     startFigures: [],
-    gridWidth: 25,
-    gridHeight: 15,
-    levelGoal: 4,
-    levelSpawningInterval: 200,
+    gridWidth: 30,
+    gridHeight: 30,
+    levelGoal: 50,
+    levelSpawningInterval: 1000,
 };
 
 
@@ -27,29 +27,15 @@ level2.init = (addFigureFunction, getCellOccupation) => {
     startFillingSequence(sequence, addFigureFunction, getCellOccupation);
 };
 
-const startFillingSequence = async (sequence, fillCell, isCellOccupied) => {
-    const getCellToFill = (i = 0) => {
-        // if by looking for an unoccupied cell we have reached
-        // the end of the sequence -> we return null
-        if (i === sequence.length) return null;
-        // if this cell is free -> return it
-        // else -> check if next cell is free
-        return isCellOccupied(sequence[i]) ? getCellToFill(i + 1) : sequence[i];
-    }
-
-    while (sequence.length !== 0) {
+const startFillingSequence = async (sequence, fillCell) => {
+    for (let cell of sequence) {
         // wait a couple of ms
         await wait(CELL_FILLING_TIMEOUT);
-        // pick a cell to fill which is not occupied by any figures or a snake
-        const cellToFill = getCellToFill();
-        // if there are none unoccupied cells then we have to stop
-        if (cellToFill === null) break;
         // pass this cell to the GameField
         fillCell({
             type: 'block',
-            ...cellToFill,
+            ...cell,
         });
-        removeFromArray(sequence, cellToFill);
     }
 }
 

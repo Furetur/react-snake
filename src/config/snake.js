@@ -1,1 +1,1 @@
-export const SNAKE_MOVING_SPEED = 50;
+export const SNAKE_MOVING_SPEED = 100;

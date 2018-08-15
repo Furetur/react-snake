@@ -29,9 +29,21 @@ class GameField extends Component {
      */
     _checkCollision(snakeCells) {
         this.state.figures.forEach((figure, index) => {
+            // if snake collides with a figure
             if (hasCell(snakeCells, figure)) {
                 // they collide
                 this._handleCollision(index, figure)
+            }
+            
+            // if snake collides with itself
+            // just check if `snakeCells` has duplicates
+            const coordsArray = snakeCells.map(cell => `x=${cell.x};y=${cell.y};`);
+            const withoutDuplicates = new Set(coordsArray);
+
+            // if number of elements = number of non-duplicate elements
+            if (coordsArray.length !== withoutDuplicates.size) {
+                // snake collides with itself
+                this._handleSnakeOnCollideWithSelf();
             }
         })
     }
@@ -59,6 +71,10 @@ class GameField extends Component {
         this.snake.kill();
     }
 
+    _handleSnakeOnCollideWithSelf() {
+        this.snake.kill();
+    }
+
     
     _getFigure(id) {
         return this[`figure${id}`];
@@ -73,6 +89,13 @@ class GameField extends Component {
 
     _addFigure = (figure) => {
         console.log('adding figure', figure, this.state.figures);
+
+        // if cell is already occupied
+        if (this._getCellOccupation(figure) !== null)  {
+            // then stop this function
+            return;
+        }
+
         figure.id = this._getUniqueFigureKey();;
         this.setState({
             figures: [figure, ...this.state.figures],

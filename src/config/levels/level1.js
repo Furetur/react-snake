@@ -1,3 +1,63 @@
+import Builder from "../../utils/Builder";
+
+const getStartFigures = () => {
+    const builder = new Builder();
+
+    // top wall
+    builder.horizontalWall({
+        y: 5,
+        fromX: 5,
+        toX: 10,
+    });
+
+    builder.horizontalWall({
+        y: 5,
+        fromX: 15,
+        toX: 29,
+    });
+
+    // left wall
+    builder.verticalWall({
+        x: 5,
+        fromY: 5,
+        toY: 15,
+    });
+
+    builder.verticalWall({
+        x: 5,
+        fromY: 20,
+        toY: 23,
+    });
+
+    //bottom wall
+    builder.horizontalWall({
+        y: 23,
+        fromX: 5,
+        toX: 29,
+    });
+
+    // right wall
+    builder.verticalWall({
+        x: 29,
+        fromY: 5,
+        toY: 10,
+    });
+
+    builder.verticalWall({
+        x: 29,
+        fromY: 12,
+        toY: 17,
+    });
+
+    builder.verticalWall({
+        x: 29,
+        fromY: 20,
+        toY: 23,
+    });
+
+    return builder.figures;
+}
+
 const level1 = {
     name: 'Level1',
     snakeStartCell: {
@@ -5,18 +65,10 @@ const level1 = {
         y: 1,
         vector: [1, 0],
     },
-    startFigures: [
-        { id: 0, type: 'poison', x: 7, y: 10 },
-        { id: 1, type: 'poison', x: 10, y: 10 },
-        { id: 2, type: 'poison', x: 3, y: 10 },
-        { id: 3, type: 'health', x: 4, y: 7 },
-        { id: 4, type: 'health', x: 10, y: 2 },
-        { id: 5, type: 'health', x: 3, y: 6 },
-        { id: 6, type: 'block', x: 4, y: 4 },
-    ],
-    gridWidth: 25,
+    startFigures: getStartFigures(),
+    gridWidth: 35,
     gridHeight: 25,
-    levelGoal: 4,
+    levelGoal: 40,
     levelSpawningInterval: 2000,
 }
 
