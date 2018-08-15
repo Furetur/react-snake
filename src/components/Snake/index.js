@@ -3,6 +3,7 @@ import { CELL_SIZE, multiplyCellSize, unitize } from '../../config/cells';
 import Cell from '../Cell';
 import vectorToRotation from '../../utils/vectorToRotation';
 import loop from '../../utils/loop';
+import vectorsAreOpposite from '../../utils/vectorsAreOpposite';
 
 export default class Snake extends Component {
   constructor(props) {
@@ -31,6 +32,10 @@ export default class Snake extends Component {
     return this.state.cells[
       this.state.cells.length - 1
     ];
+  }
+
+  get vector() {
+    return this.head.vector;
   }
 
 

@@ -9,4 +9,24 @@
   padding: 15px;
 
   border: 1px solid gray;
+
+  /* if not focused */
+  filter: grayscale(100%);
+}
+
+.App:focus {
+  filter: none;
+}
+
+.focus-reminder {
+  display: none;
+  position: absolute;
+  top: 50px;
+  left: 50px;
+
+  font-size: 5rem;
+}
+
+.focus-reminder.shown {
+  display: block;
 }
