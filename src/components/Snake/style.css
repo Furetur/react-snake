@@ -1,10 +1,11 @@
 .Snake {
-    background: #94D0FF;
+    background: linear-gradient(90deg, #8795e8 40%, #94D0FF);
     /* background: #218763; */
+    
 }
 
 .Snake.head {
-    /* background: linear-gradient(#b967ff 60%, #218763); */
+    /* background: linear-gradient(#8795e8 40%, #94D0FF); */
     border-radius: 40% 40% 0 0;
     /* box-shadow: 0 0 10px rgba(255,255,255,1), 0 0 20px rgba(255,255,255,1), 0 0 30px rgba(255,255,255,1), 0 0 40px #00ffff, 0 0 70px #00ffff, 0 0 80px #00ffff, 0 0 100px #00ffff;; */
 }
@@ -14,5 +15,6 @@
 }
 
 .Snake.head.tail {
+    /* background: #8795e8; */
     border-radius: 35%;
 }

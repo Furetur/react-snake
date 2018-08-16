@@ -16,11 +16,6 @@ const Cell = (props) => {
     lineHeight: unitize(CELL_SIZE),
 
     transform: `rotate(${props.rotation}deg)`,
-
-    // remove later
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
   };
 
   return (
