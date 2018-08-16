@@ -42,6 +42,9 @@ export default class Snake extends Component {
     return this.state.cells.length - 1;
   }
 
+  get vector() {
+    return this.head.vector;
+  }
 
   get config() {
     return this.state.cells.map(cell => cell.vector).toString();

@@ -118,6 +118,9 @@ class App extends Component {
     // we cant turn snake 180 def
     if (this.gameField.snake.prehead && vectorsAreOpposite(vector, this.gameField.snake.prehead.vector)) return;
 
+    // if snake is already moving in the same direction
+    if (vector[0] === this.gameField.snake.vector[0] && vector[1] === this.gameField.snake.vector[1]) return;
+
     this.stopMovingSnake();
     this.gameField.snake.turn(vector);
     this.startMovingSnake();
